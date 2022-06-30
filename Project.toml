@@ -1,0 +1,7 @@
+name = "ToolipsMemWrite"
+uuid = "57c31d6b-7ec9-45e4-80ae-c449616bb020"
+authors = ["emmac <emmettgb@gmail.com>"]
+version = "0.1.0"
+
+[deps]
+Toolips = "a47e2ad8-fcf7-417c-9746-32b9bdf220bd"
