@@ -76,7 +76,7 @@ function myroute(c::Connection)
 end
 ```
 """
-getindex(cmem::ComponentMemory, s::Servable) = cmem.lookup[s.name]
+getindex(cmem::ComponentMemory, s::Servable) = cmem.lookup[s.name]::String
 
 """
 **MemWrite Interface**
@@ -97,7 +97,7 @@ function myroute(c::Connection)
 end
 ```
 """
-getindex(cmem::ComponentMemory, name::String) = cmem.lookup[name]
+getindex(cmem::ComponentMemory, name::String) = cmem.lookup[name]::String
 
 """
 **MemWrite Interface**
@@ -123,7 +123,7 @@ function memwrite!(c::AbstractConnection, s::Servable)
     if s.name in keys(c[:ComponentMemory])
         write!(c, c[:ComponentMemory][s])
     else
-        spoofconn = SpoofConnection()
+        spoofconn::SpoofConnection = SpoofConnection()
         write!(spoofconn, s)
         push!(c[:ComponentMemory].lookup, s.name => spoofconn.http.text)
         write!(c, s)
@@ -151,11 +151,11 @@ end
 ```
 """
 function memwrite!(c::AbstractConnection, s::Vector{Servable})
-    name = join([comp.name for comp in s])
+    name::String = join([comp.name for comp in s])
     if name in keys(c[:ComponentMemory])
         write!(c, c[:ComponentMemory][name])
     else
-        spoofconn = SpoofConnection()
+        spoofconn::SpoofConnection = SpoofConnection()
         write!(spoofconn, s)
         push!(c[:ComponentMemory].lookup, name => spoofconn.http.text)
         write!(c, s)
