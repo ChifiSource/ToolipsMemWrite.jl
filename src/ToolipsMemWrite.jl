@@ -162,4 +162,5 @@ function memwrite!(c::AbstractConnection, s::Vector{Servable})
     end
 end
 
+export memwrite!, ComponentMemory
 end # module
