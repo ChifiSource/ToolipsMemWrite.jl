@@ -12,7 +12,7 @@ and the ComponentMemory extension.
 """
 module ToolipsMemWrite
 using Toolips
-import Toolips: SpoofConnection, ServerExtension, Servable
+import Toolips: SpoofConnection, ServerExtension, Servable, AbstractConnection
 import Base: getindex
 
 """
