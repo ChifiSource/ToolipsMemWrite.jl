@@ -120,7 +120,7 @@ end
 ```
 """
 function memwrite!(c::AbstractConnection, s::Servable)
-    if s.name in keys(c[:ComponentMemory])
+    if s.name in keys(c[:ComponentMemory].lookup)
         write!(c, c[:ComponentMemory][s])
     else
         spoofconn::SpoofConnection = SpoofConnection()
@@ -152,7 +152,7 @@ end
 """
 function memwrite!(c::AbstractConnection, s::Vector{Servable})
     name::String = join([comp.name for comp in s])
-    if name in keys(c[:ComponentMemory])
+    if name in keys(c[:ComponentMemory].lookup)
         write!(c, c[:ComponentMemory][name])
     else
         spoofconn::SpoofConnection = SpoofConnection()
