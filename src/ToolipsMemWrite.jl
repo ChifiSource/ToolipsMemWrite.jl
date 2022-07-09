@@ -119,23 +119,61 @@ function myroute(c::Connection)
 end
 ```
 """
-function memwrite!(c::AbstractConnection, s::Servable)
+function memwrite!(c::AbstractConnection, s::Servable; write::Bool = true)
     if s.name in keys(c[:ComponentMemory].lookup)
-        write!(c, c[:ComponentMemory][s])
+        if write == true
+            write!(c, c[:ComponentMemory][s])
+        end
     else
-        spoofconn::SpoofConnection = SpoofConnection()
-        write!(spoofconn, s)
-        push!(c[:ComponentMemory].lookup, s.name => spoofconn.http.text)
-        write!(c, s)
+        if write == true
+            spoofconn::SpoofConnection = SpoofConnection()
+            write!(spoofconn, s)
+            push!(c[:ComponentMemory].lookup, s.name => spoofconn.http.text)
+            write!(c, s)
+        end
     end
 end
 
+function memwrite!(c::AbstractConnection, name::String; write = true)
+    if s.name in keys(c[:ComponentMemory].lookup)
+        if write == true
+            write!(c, c[:ComponentMemory][s])
+        end
+        return true
+    else
+        if write == true
+            throw(ArgumentError("""memwrite! write set to true on string not present,
+            wrap this in a conditional. Use `?(memwrite!)` for more info."""))
+        end
+        return false
+    end
+end
 """
 **MemWrite Interface**
-### memwrite!(c::AbstractConnection, s::Vector{Servable})
+### memwrite!(c::AbstractConnection, s::Vector{Servable}; write::Bool = true) -> ::Bool
 ------------------
 Writes the Components in s to the Connection c, then saves the Components for
-future writing.
+future writing. Returns a Bool telling as to whether or not the Components ARE
+available in MemWrite memory.`write` determines whether or not memwrite! should also
+write to your connection.
+```julia
+route("/") do c::Connection
+    #  preserves connection integrity, while checking memory
+    if memwrite!(c, "mydiv", write = false) # will not add to memory if
+        memwrite!(c, "mydiv")
+        # Entering "return" breaks the function pipeline of our Connection.
+        return
+    end
+    # This only gets ran if the above condition is not met.
+    mydiv = divider("mydiv", align = "center")
+    # vv will write to connection, and add to memory.
+    memwrite!(c, mydiv)
+
+```
+Note that this can also be done with any other type that can be memwritten, use
+`?(memwrite!)` for details. Also, involving on(), for example, or other
+functions that require the `Connecction` to run will also need to be put into
+this conditional statement, although it's important to remember not to write them.
 #### example
 ```
 function myroute(c::Connection)
@@ -150,15 +188,22 @@ function myroute(c::Connection)
 end
 ```
 """
-function memwrite!(c::AbstractConnection, s::Vector{Servable})
+function memwrite!(c::AbstractConnection, s::Vector{Servable};
+    write::Bool = true)
     name::String = join([comp.name for comp in s])
     if name in keys(c[:ComponentMemory].lookup)
-        write!(c, c[:ComponentMemory][name])
+        if write == true
+            write!(c, c[:ComponentMemory][name])
+        end
+        return true
     else
-        spoofconn::SpoofConnection = SpoofConnection()
-        write!(spoofconn, s)
-        push!(c[:ComponentMemory].lookup, name => spoofconn.http.text)
-        write!(c, s)
+        if write == true
+            write!(c, s)
+            spoofconn::SpoofConnection = SpoofConnection()
+            write!(spoofconn, s)
+            push!(c[:ComponentMemory].lookup, name => spoofconn.http.text)
+        end
+        return false
     end
 end
 
