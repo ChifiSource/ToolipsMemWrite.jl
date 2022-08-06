@@ -7,5 +7,5 @@ version = "0.1.0"
 Toolips = "a47e2ad8-fcf7-417c-9746-32b9bdf220bd"
 
 [compat]
-Toolips = ">= 0.1.0"
+Toolips = "0.2.0"
 julia = "1.6"
