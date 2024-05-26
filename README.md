@@ -1,5 +1,10 @@
 <img src = "https://github.com/ChifiSource/image_dump/blob/main/toolips/toolipsmemwrite.png"></img>
 
+## dead repo
+`ToolipsMemWrite` is deprecated in favor of easier extension loading and `Component` composure. 
+--
+- ( **This project can still be used with `Toolips` `0.2`.** )
+- 
 - [Documentation](doc.toolips.app/extensions/toolips_base64)
 - [Toolips](https://github.com/ChifiSource/Toolips.jl)
 - [Extension Gallery](https://toolips.app/?page=gallery&selected=memwrite)\
